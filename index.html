@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小金再生资源 - 科技赋能环保</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary-green: #00B42A;
+            --primary-blue: #1E3A8A;
+            --accent-orange: #F97316;
+            --light-gray: #F3F4F6;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', 'Roboto', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        .hero-bg {
+            background-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/8484d4e76e7c4aec94e4e87912ff57a5~tplv-a9rns2rl98-image.image?rcl=202512121432397BC4BF65AE40260A214C&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768113235&x-signature=MPQ%2BYXqHAf9AEEfVLYIdwF7Gqsg%3D');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary-green);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-green);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 180, 42, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: var(--primary-blue);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-card {
+            perspective: 1000px;
+        }
+        
+        .product-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .product-card:hover .product-card-inner {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+        
+        .team-member-card img {
+            transition: all 0.3s ease;
+        }
+        
+        .team-member-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .counter {
+            transition: all 0.5s ease;
+        }
+        
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        /* 3D Logo Container */
+        #logo-container {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* 3D Product Preview Containers */
+        .product-3d-container {
+            width: 100%;
+            height: 300px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        /* Data Visualization Container */
+        #data-visualization {
+            width: 100%;
+            height: 400px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #logo-container {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .product-3d-container {
+                height: 200px;
+            }
+            
+            #data-visualization {
+                height: 300px;
+            }
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .loading div {
+            position: absolute;
+            top: 33px;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--primary-green);
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+        
+        .loading div:nth-child(1) {
+            left: 8px;
+            animation: loading1 0.6s infinite;
+        }
+        
+        .loading div:nth-child(2) {
+            left: 8px;
+            animation: loading2 0.6s infinite;
+        }
+        
+        .loading div:nth-child(3) {
+            left: 32px;
+            animation: loading2 0.6s infinite;
+        }
+        
+        .loading div:nth-child(4) {
+            left: 56px;
+            animation: loading3 0.6s infinite;
+        }
+        
+        @keyframes loading1 {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes loading3 {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(0);
+            }
+        }
+        
+        @keyframes loading2 {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(24px, 0);
+            }
+        }
+        
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        /* Back to top button */
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            z-index: 99;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Language Switcher -->
+    <div class="lang-switcher bg-white rounded-full shadow-lg p-2 flex">
+        <button id="lang-zh" class="lang-btn px-3 py-1 rounded-full bg-green-500 text-white">中</button>
+        <button id="lang-en" class="lang-btn px-3 py-1 rounded-full">EN</button>
+    </div>
+    
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="btn-primary rounded-full p-3 shadow-lg">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50 transition-all duration-300" id="main-nav">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4986502f3a7443e2abb7381961f2ea11~tplv-a9rns2rl98-image.image?rcl=202512121432397BC4BF65AE40260A214C&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768113196&x-signature=qVLSVUtlgf2iYeE4pCDTCx%2FxDDI%3D" alt="小金再生资源" class="h-12">
+                    <span class="ml-3 text-xl font-bold text-gray-800" data-lang="nav-company">小金再生资源</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-green-500 font-medium" data-lang="nav-home">首页</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-green-500 font-medium" data-lang="nav-about">关于我们</a>
+                    <a href="#business" class="nav-link text-gray-700 hover:text-green-500 font-medium" data-lang="nav-business">核心业务</a>
+                    <a href="#products" class="nav-link text-gray-700 hover:text-green-500 font-medium" data-lang="nav-products">产品中心</a>
+                    <a href="#news" class="nav-link text-gray-700 hover:text-green-500 font-medium" data-lang="nav-news">新闻动态</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-green-500 font-medium" data-lang="nav-contact">联系我们</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-700 hover:text-green-500 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="mobile-menu fixed top-0 left-0 h-full w-4/5 bg-white shadow-lg z-50 p-5">
+            <div class="flex justify-between items-center mb-8">
+                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4986502f3a7443e2abb7381961f2ea11~tplv-a9rns2rl98-image.image?rcl=202512121432397BC4BF65AE40260A214C&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768113196&x-signature=qVLSVUtlgf2iYeE4pCDTCx%2FxDDI%3D" alt="小金再生资源" class="h-10">
+                <button id="close-mobile-menu" class="text-gray-700 hover:text-green-500 focus:outline-none">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="mobile-nav-link py-2 px-4 hover:bg-green-50 rounded" data-lang="nav-home">首页</a>
+                <a href="#about" class="mobile-nav-link py-2 px-4 hover:bg-green-50 rounded" data-lang="nav-about">关于我们</a>
+                <a href="#business" class="mobile-nav-link py-2 px-4 hover:bg-green-50 rounded" data-lang="nav-business">核心业务</a>
+                <a href="#products" class="mobile-nav-link py-2 px-4 hover:bg-green-50 rounded" data-lang="nav-products">产品中心</a>
+                <a href="#news" class="mobile-nav-link py-2 px-4 hover:bg-green-50 rounded" data-lang="nav-news">新闻动态</a>
+                <a href="#contact" class="mobile-nav-link py-2 px-4 hover:bg-green-50 rounded" data-lang="nav-contact">联系我们</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg min-h-screen flex items-center pt-16">
+        <div class="container mx-auto px-4 py-16">
+            <div class="flex flex-col md:flex-row items-center">
+                <!-- 3D Logo -->
+                <div class="w-full md:w-1/2 mb-10 md:mb-0 flex justify-center">
+                    <div id="logo-container" class="relative"></div>
+                </div>
+                
+                <!-- Hero Content -->
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6" data-lang="hero-title">科技赋能环保</h1>
+                    <p class="text-xl md:text-2xl text-white mb-8 opacity-90" data-lang="hero-subtitle">高效垃圾分类 · 碳中和技术 · 智能环保设备制造</p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
+                        <a href="#about" class="btn-primary text-white font-medium py-3 px-8 rounded-full text-lg" data-lang="hero-about-btn">了解更多</a>
+                        <a href="#contact" class="btn-secondary text-white font-medium py-3 px-8 rounded-full text-lg" data-lang="hero-contact-btn">联系我们</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white scroll-indicator">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Core Advantages Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4" data-lang="advantages-title">核心优势</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto" data-lang="advantages-subtitle">我们拥有一支高素质的研发团队和先进的技术，致力于为客户提供最优质的环保解决方案</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Team Strength -->
+                <div class="bg-gray-50 rounded-xl p-8 shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-green-600" data-lang="advantages-team-title">团队实力</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-green-500 counter" data-target="15">0</div>
+                            <p class="text-gray-600" data-lang="advantages-doctor">博士</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-green-500 counter" data-target="35">0</div>
+                            <p class="text-gray-600" data-lang="advantages-master">硕士</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-green-500 counter" data-target="60">0</div>
+                            <p class="text-gray-600" data-lang="advantages-985">985/211</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-green-500 counter" data-target="120">0</div>
+                            <p class="text-gray-600" data-lang="advantages-staff">团队成员</p>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/2317859314110038043~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=n1SqgzZf1SswLN8QTr3FKHUuO6I%3D" alt="研发团队" class="rounded-lg w-full h-48 object-cover">
+                    </div>
+                </div>
+                
+                <!-- Data Visualization -->
+                <div class="bg-gray-50 rounded-xl p-8 shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-blue-600" data-lang="advantages-data-title">数据看板</h3>
+                    <div id="data-visualization" class="mb-4"></div>
+                    <div class="grid grid-cols-2 gap-6 mt-8">
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-blue-500 counter" data-target="95">0</div>
+                            <p class="text-gray-600" data-lang="advantages-sorting-rate">垃圾分类率 (%)</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-blue-500 counter" data-target="25000">0</div>
+                            <p class="text-gray-600" data-lang="advantages-carbon-reduction">碳减排量 (吨/年)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Products Preview Section -->
+    <section id="products" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4" data-lang="products-title">产品预览</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto" data-lang="products-subtitle">我们提供一系列智能环保设备，助力城市垃圾分类和环境清洁</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Product 1 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden shadow-lg">
+                    <div class="product-card-inner">
+                        <div class="product-3d-container" id="product-1"></div>
+                        <img src="https://p3-doubao-search-sign.byteimg.com/ecom-shop-material/GwNAtZdq_m_2673a3483b5b66c71c335c8b9ef2ec8f_sx_335308_www800-800~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=EiPsBRgj57r6v4h3z5ak1tMKNok%3D" alt="智能垃圾分类箱" class="w-full h-64 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2" data-lang="product-1-title">智能垃圾分类箱</h3>
+                        <p class="text-gray-600 mb-4" data-lang="product-1-desc">AI识别、自动分类、积分奖励系统，提高居民参与度</p>
+                        <a href="#" class="text-green-500 hover:text-green-700 font-medium flex items-center" data-lang="product-learn-more">
+                            了解更多 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden shadow-lg">
+                    <div class="product-card-inner">
+                        <div class="product-3d-container" id="product-2"></div>
+                        <img src="https://p3-doubao-search-sign.byteimg.com/labis/image/3a46dd7c28ea3f83260bf938f35f59b0~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=WM7%2BtZkR6dH4hHp9MI0sp7NlDgk%3D" alt="智能回收秤" class="w-full h-64 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2" data-lang="product-2-title">智能回收秤</h3>
+                        <p class="text-gray-600 mb-4" data-lang="product-2-desc">精准称重、数据上传、智能结算，提升回收效率</p>
+                        <a href="#" class="text-green-500 hover:text-green-700 font-medium flex items-center" data-lang="product-learn-more">
+                            了解更多 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden shadow-lg">
+                    <div class="product-card-inner">
+                        <div class="product-3d-container" id="product-3"></div>
+                        <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/310d173b61c84d2da851972425285465~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=Q8LTEdF8H9jGrrbfO7WdMx3X4kU%3D" alt="无人清扫车" class="w-full h-64 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2" data-lang="product-3-title">无人清扫车</h3>
+                        <p class="text-gray-600 mb-4" data-lang="product-3-desc">自动驾驶、智能避障、高效清扫，降低人力成本</p>
+                        <a href="#" class="text-green-500 hover:text-green-700 font-medium flex items-center" data-lang="product-learn-more">
+                            了解更多 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="btn-primary text-white font-medium py-3 px-8 rounded-full text-lg inline-block" data-lang="products-view-all">查看全部产品</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Company Mission Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4" data-lang="mission-title">企业使命</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto" data-lang="mission-subtitle">我们致力于通过科技创新推动环保事业发展，为建设美丽中国贡献力量</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Mission -->
+                <div class="bg-green-50 rounded-xl p-8 shadow-md text-center">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-bullseye text-3xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4" data-lang="mission-mission">使命</h3>
+                    <p class="text-gray-600" data-lang="mission-mission-text">通过科技创新推动垃圾分类和资源回收利用，减少环境污染，保护生态环境</p>
+                </div>
+                
+                <!-- Vision -->
+                <div class="bg-blue-50 rounded-xl p-8 shadow-md text-center">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-eye text-3xl text-blue-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4" data-lang="mission-vision">愿景</h3>
+                    <p class="text-gray-600" data-lang="mission-vision-text">成为全球领先的智能环保解决方案提供商，引领行业发展方向</p>
+                </div>
+                
+                <!-- Values -->
+                <div class="bg-orange-50 rounded-xl p-8 shadow-md text-center">
+                    <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-heart text-3xl text-orange-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4" data-lang="mission-values">价值观</h3>
+                    <p class="text-gray-600" data-lang="mission-values-text">创新、责任、合作、共赢，以科技之力守护绿水青山</p>
+                </div>
+            </div>
+            
+            <!-- Scroll Animation -->
+            <div class="mt-20 relative">
+                <div class="overflow-hidden">
+                    <div class="flex space-x-8 animate-scroll">
+                        <div class="flex-shrink-0 bg-gray-100 rounded-lg p-6 w-80">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-recycle text-green-500 text-2xl mr-3"></i>
+                                <h4 class="font-bold" data-lang="mission-pillar-1">垃圾分类</h4>
+                            </div>
+                            <p class="text-gray-600" data-lang="mission-pillar-1-text">通过智能化设备和系统化解决方案，提高垃圾分类准确率和效率</p>
+                        </div>
+                        <div class="flex-shrink-0 bg-gray-100 rounded-lg p-6 w-80">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-leaf text-green-500 text-2xl mr-3"></i>
+                                <h4 class="font-bold" data-lang="mission-pillar-2">碳中和</h4>
+                            </div>
+                            <p class="text-gray-600" data-lang="mission-pillar-2-text">开发碳减排技术，助力企业和城市实现碳中和目标</p>
+                        </div>
+                        <div class="flex-shrink-0 bg-gray-100 rounded-lg p-6 w-80">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-robot text-green-500 text-2xl mr-3"></i>
+                                <h4 class="font-bold" data-lang="mission-pillar-3">智能设备</h4>
+                            </div>
+                            <p class="text-gray-600" data-lang="mission-pillar-3-text">研发和制造智能环保设备，提升环保工作的智能化水平</p>
+                        </div>
+                        <div class="flex-shrink-0 bg-gray-100 rounded-lg p-6 w-80">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-chart-line text-green-500 text-2xl mr-3"></i>
+                                <h4 class="font-bold" data-lang="mission-pillar-4">数据服务</h4>
+                            </div>
+                            <p class="text-gray-600" data-lang="mission-pillar-4-text">提供环保数据分析和决策支持，实现精准环保管理</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Us Section -->
+    <section id="about" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4" data-lang="about-title">关于我们</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto" data-lang="about-subtitle">小金再生资源是一家专注于环保科技创新的企业，致力于为客户提供全方位的环保解决方案</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Company Introduction -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 text-green-600" data-lang="about-company-title">公司简介</h3>
+                    <p class="text-gray-600 mb-6" data-lang="about-company-text-1">小金再生资源成立于2025年，是一家聚焦"高效垃圾分类、碳中和技术、智能环保设备制造"的科技型环保企业。公司拥有一支高素质的研发团队，核心成员均来自国内外知名高校和企业。</p>
+                    <p class="text-gray-600 mb-6" data-lang="about-company-text-2">我们的核心产品涵盖智能垃圾分类箱、智能回收秤、智能环卫车、无人清扫车等，广泛应用于城市垃圾分类、资源回收利用和环境清洁等领域。</p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span data-lang="about-feature-1">国家高新技术企业</span>
+                        </div>
+                        <div class="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span data-lang="about-feature-2">ISO9001质量认证</span>
+                        </div>
+                        <div class="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span data-lang="about-feature-3">50+项专利技术</span>
+                        </div>
+                        <div class="bg-white rounded-lg px-4 py-2 shadow-sm flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span data-lang="about-feature-4">服务100+城市</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Company Environment -->
+                <div>
+                    <div class="relative">
+                        <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1009141727870058512~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=CYlizcvJzl1CugqX5IlOE4W6TBI%3D" alt="公司环境" class="rounded-xl shadow-lg w-full">
+                        <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg w-48 hidden md:block">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-green-500 counter" data-target="5">0</div>
+                                <p class="text-gray-600" data-lang="about-years">年行业经验</p>
+                            </div>
+                        </div>
+                        <div class="absolute -top-6 -right-6 bg-white p-4 rounded-lg shadow-lg w-48 hidden md:block">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-blue-500 counter" data-target="200">0</div>
+                                <p class="text-gray-600" data-lang="about-projects">成功项目</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Team Introduction -->
+            <div class="mt-24">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="about-team-title">核心团队</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                    <!-- Team Member 1 -->
+                    <div class="team-member-card bg-white rounded-xl overflow-hidden shadow-md">
+                        <div class="overflow-hidden">
+                            <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/174590257381961f2ea11~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=3eqfIs7XDjiqFkQJYKbgavQJph4%3D" alt="张博士" class="w-full h-64 object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-lg font-bold mb-1" data-lang="about-team-1-name">张博士</h4>
+                            <p class="text-green-500 mb-3" data-lang="about-team-1-title">技术总监</p>
+                            <p class="text-gray-600 text-sm mb-4" data-lang="about-team-1-desc">清华大学环境工程博士，曾任职于国际知名环保企业，拥有10年以上环保技术研发经验</p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Team Member 2 -->
+                    <div class="team-member-card bg-white rounded-xl overflow-hidden shadow-md">
+                        <div class="overflow-hidden">
+                            <img src="https://p11-doubao-search-sign.byteimg.com/labis/d0abf1af77a68d6a142ce3e5fc34254c~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=b0I5SYZ8HnIL6RJUi9lLpTuJM%2Fc%3D" alt="李博士" class="w-full h-64 object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-lg font-bold mb-1" data-lang="about-team-2-name">李博士</h4>
+                            <p class="text-green-500 mb-3" data-lang="about-team-2-title">研发总监</p>
+                            <p class="text-gray-600 text-sm mb-4" data-lang="about-team-2-desc">北京大学计算机科学博士，专注于AI算法和计算机视觉在环保领域的应用研究</p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Team Member 3 -->
+                    <div class="team-member-card bg-white rounded-xl overflow-hidden shadow-md">
+                        <div class="overflow-hidden">
+                            <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/2317859314110038043~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=n1SqgzZf1SswLN8QTr3FKHUuO6I%3D" alt="王经理" class="w-full h-64 object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-lg font-bold mb-1" data-lang="about-team-3-name">王经理</h4>
+                            <p class="text-green-500 mb-3" data-lang="about-team-3-title">市场总监</p>
+                            <p class="text-gray-600 text-sm mb-4" data-lang="about-team-3-desc">复旦大学MBA，拥有丰富的环保行业市场推广和项目管理经验</p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Team Member 4 -->
+                    <div class="team-member-card bg-white rounded-xl overflow-hidden shadow-md">
+                        <div class="overflow-hidden">
+                            <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1745902573819265048~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=3eqfIs7XDjiqFkQJYKbgavQJph4%3D" alt="赵博士" class="w-full h-64 object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-lg font-bold mb-1" data-lang="about-team-4-name">赵博士</h4>
+                            <p class="text-green-500 mb-3" data-lang="about-team-4-title">产品总监</p>
+                            <p class="text-gray-600 text-sm mb-4" data-lang="about-team-4-desc">麻省理工学院机械工程博士，专注于智能环保设备的设计和开发</p>
+                            <div class="flex space-x-3">
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-gray-400 hover:text-green-500">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Business Section -->
+    <section id="business" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4" data-lang="business-title">核心业务</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto" data-lang="business-subtitle">我们提供全方位的环保解决方案，助力城市绿色发展</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Business 1 -->
+                <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-8 shadow-lg">
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                        <i class="fas fa-recycle text-3xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-center" data-lang="business-1-title">垃圾分类解决方案</h3>
+                    <p class="text-gray-600 mb-6" data-lang="business-1-desc">提供智能化垃圾分类系统，包括智能分类箱、回收秤、数据管理平台等，实现垃圾分类的智能化、信息化和精细化管理。</p>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span data-lang="business-1-feature-1">AI视觉识别技术</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span data-lang="business-1-feature-2">智能积分奖励系统</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span data-lang="business-1-feature-3">大数据分析平台</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="text-green-500 hover:text-green-700 font-medium flex items-center" data-lang="business-learn-more">
+                        了解更多 <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <!-- Business 2 -->
+                <div class="bg-gradient-to-br from-blue-50 to-green-50 rounded-xl p-8 shadow-lg">
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                        <i class="fas fa-leaf text-3xl text-blue-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-center" data-lang="business-2-title">碳中和技术</h3>
+                    <p class="text-gray-600 mb-6" data-lang="business-2-desc">开发碳减排技术和碳汇管理系统，帮助企业和城市测量、报告和减少碳排放，实现碳中和目标。</p>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span data-lang="business-2-feature-1">碳排放监测系统</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span data-lang="business-2-feature-2">碳足迹分析工具</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span data-lang="business-2-feature-3">碳中和解决方案</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="text-blue-500 hover:text-blue-700 font-medium flex items-center" data-lang="business-learn-more">
+                        了解更多 <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <!-- Business 3 -->
+                <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-8 shadow-lg">
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                        <i class="fas fa-robot text-3xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-center" data-lang="business-3-title">智能设备制造</h3>
+                    <p class="text-gray-600 mb-6" data-lang="business-3-desc">研发和制造智能环保设备，包括智能垃圾分类箱、智能回收秤、智能环卫车、无人清扫车等。</p>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span data-lang="business-3-feature-1">自主研发核心技术</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span data-lang="business-3-feature-2">智能化控制系统</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span data-lang="business-3-feature-3">远程监控和维护</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="text-green-500 hover:text-green-700 font-medium flex items-center" data-lang="business-learn-more">
+                        了解更多 <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Case Studies -->
+            <div class="mt-24">
+                <h3 class="text-2xl font-bold mb-8 text-center" data-lang="business-cases-title">成功案例</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Case Study 1 -->
+                    <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/ecom-shop-material/webp_m_45b6482965d0e29c2b9548ab2bde461f_sx_277462_www800-800~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=kiBmhOIzMdpOgF7VDsoUTDSWRQg%3D" alt="案例1" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold mb-2" data-lang="business-case-1-title">北京市海淀区智能垃圾分类项目</h4>
+                            <p class="text-gray-600 mb-4" data-lang="business-case-1-desc">为海淀区100个社区提供智能垃圾分类解决方案，覆盖居民20万户，垃圾分类准确率提升至95%以上。</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500" data-lang="business-case-date">2024年6月</span>
+                                <a href="#" class="text-green-500 hover:text-green-700 font-medium" data-lang="business-case-detail">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Case Study 2 -->
+                    <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/b52cc1f61241441fa1d8c488445a1033~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=n%2FXBOHRgF3MPfnXlB8N%2F7Axz7qQ%3D" alt="案例2" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold mb-2" data-lang="business-case-2-title">上海市浦东新区无人清扫车项目</h4>
+                            <p class="text-gray-600 mb-4" data-lang="business-case-2-desc">在浦东新区核心商圈部署50台无人清扫车，实现24小时智能清扫，清扫效率提升300%，人力成本降低60%。</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500" data-lang="business-case-date">2024年9月</span>
+                                <a href="#" class="text-green-500 hover:text-green-700 font-medium" data-lang="business-case-detail">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- News Section -->
+    <section id="news" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4" data-lang="news-title">新闻动态</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto" data-lang="news-subtitle">了解公司最新动态和行业资讯</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- News 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                    <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/2317859314110038043~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=n1SqgzZf1SswLN8QTr3FKHUuO6I%3D" alt="新闻1" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded" data-lang="news-company-news">公司新闻</span>
+                            <span class="text-gray-500 text-sm ml-auto">2025-06-15</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3" data-lang="news-1-title">小金再生资源完成B轮融资，估值达10亿元</h3>
+                        <p class="text-gray-600 mb-4" data-lang="news-1-desc">本轮融资将用于扩大智能环保设备生产规模和研发新一代垃圾分类技术...</p>
+                        <a href="#" class="text-green-500 hover:text-green-700 font-medium flex items-center" data-lang="news-read-more">
+                            阅读更多 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- News 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/ecom-shop-material/GwNAtZdq_m_a55ecfb459ec5439de8e75c62100e03f_sx_331606_www800-800~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=WzT6JLdZKgDxFOTonmFs3gc4UjM%3D" alt="新闻2" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded" data-lang="news-product-news">产品新闻</span>
+                            <span class="text-gray-500 text-sm ml-auto">2025-05-20</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3" data-lang="news-2-title">小金再生资源发布新一代智能垃圾分类箱</h3>
+                        <p class="text-gray-600 mb-4" data-lang="news-2-desc">新一代产品采用更先进的AI识别技术，识别准确率提升至98%，支持更多种类垃圾的分类...</p>
+                        <a href="#" class="text-green-500 hover:text-green-700 font-medium flex items-center" data-lang="news-read-more">
+                            阅读更多 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- News 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                    <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1009141727870058512~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781073203&x-signature=CYlizcvJzl1CugqX5IlOE4W6TBI%3D" alt="新闻3" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded" data-lang="news-industry-news">行业资讯</span>
+                            <span class="text-gray-500 text-sm ml-auto">2025-04-10</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3" data-lang="news-3-title">国家发布新版垃圾分类标准，促进垃圾分类精细化</h3>
+                        <p class="text-gray-600 mb-4" data-lang="news-3-desc">新版标准对垃圾种类进行了更详细的划分，将进一步推动垃圾分类工作的精细化和规范化...</p>
+                        <a href="#" class="text-green-500 hover:text-green-700 font-medium flex items-center" data-lang="news-read-more">
+                            阅读更多 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="btn-primary text-white font-medium py-3 px-8 rounded-full text-lg inline-block" data-lang="news-view-all">查看全部新闻</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4" data-lang="contact-title">联系我们</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto" data-lang="contact-subtitle">如果您对我们的产品和服务感兴趣，或有任何问题，请随时与我们联系</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Contact Information -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 text-green-600" data-lang="contact-info-title">联系方式</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-map-marker-alt text-green-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1" data-lang="contact-address">总部地址</h4>
+                                <p class="text-gray-600" data-lang="contact-address-detail">北京市海淀区中关村科技园区环保科技园B座5层</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-phone-alt text-green-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1" data-lang="contact-phone">电话</h4>
+                                <p class="text-gray-600">400-888-8888</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-green-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1" data-lang="contact-email">邮箱</h4>
+                                <p class="text-gray-600">info@xiaojin-recycling.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-clock text-green-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1" data-lang="contact-hours">工作时间</h4>
+                                <p class="text-gray-600" data-lang="contact-hours-detail">周一至周五: 9:00 - 18:00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-10">
+                        <h4 class="font-bold mb-4" data-lang="contact-social">关注我们</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition">
+                                <i class="fab fa-weixin text-green-500"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition">
+                                <i class="fab fa-weibo text-green-500"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition">
+                                <i class="fab fa-linkedin-in text-green-500"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition">
+                                <i class="fab fa-twitter text-green-500"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 text-green-600" data-lang="contact-form-title">留言表单</h3>
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-gray-700 font-medium mb-2" data-lang="contact-form-name">姓名</label>
+                                <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                            </div>
+                            <div>
+                                <label for="company" class="block text-gray-700 font-medium mb-2" data-lang="contact-form-company">公司</label>
+                                <input type="text" id="company" name="company" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-gray-700 font-medium mb-2" data-lang="contact-form-phone">电话</label>
+                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-700 font-medium mb-2" data-lang="contact-form-email">邮箱</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-700 font-medium mb-2" data-lang="contact-form-message">需求描述</label>
+                            <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn-primary text-white font-medium py-3 px-8 rounded-lg text-lg w-full" data-lang="contact-form-submit">提交</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4986502f3a7443e2abb7381961f2ea11~tplv-a9rns2rl98-image.image?rcl=202512121432397BC4BF65AE40260A214C&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768113196&x-signature=qVLSVUtlgf2iYeE4pCDTCx%2FxDDI%3D" alt="小金再生资源" class="h-12 mb-6">
+                    <p class="text-gray-400 mb-6" data-lang="footer-desc">小金再生资源是一家聚焦"高效垃圾分类、碳中和技术、智能环保设备制造"的科技型环保企业</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-weibo text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-linkedin-in text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6" data-lang="footer-quick-links">快速链接</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-gray-400 hover:text-white" data-lang="footer-home">首页</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white" data-lang="footer-about">关于我们</a></li>
+                        <li><a href="#business" class="text-gray-400 hover:text-white" data-lang="footer-business">核心业务</a></li>
+                        <li><a href="#products" class="text-gray-400 hover:text-white" data-lang="footer-products">产品中心</a></li>
+                        <li><a href="#news" class="text-gray-400 hover:text-white" data-lang="footer-news">新闻动态</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white" data-lang="footer-contact">联系我们</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Products -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6" data-lang="footer-products">产品中心</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white" data-lang="footer-product-1">智能垃圾分类箱</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white" data-lang="footer-product-2">智能回收秤</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white" data-lang="footer-product-3">智能环卫车</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white" data-lang="footer-product-4">无人清扫车</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white" data-lang="footer-product-5">垃圾分类管理平台</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white" data-lang="footer-product-6">碳中和解决方案</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6" data-lang="footer-contact">联系我们</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-green-500"></i>
+                            <span class="text-gray-400" data-lang="footer-address">北京市海淀区中关村科技园区环保科技园B座5层</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-green-500"></i>
+                            <span class="text-gray-400">400-888-8888</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-green-500"></i>
+                            <span class="text-gray-400">info@xiaojin-recycling.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-clock mt-1 mr-3 text-green-500"></i>
+                            <span class="text-gray-400" data-lang="footer-hours">周一至周五: 9:00 - 18:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0" data-lang="footer-copyright">© 2025 小金再生资源科技有限公司. 保留所有权利.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm" data-lang="footer-privacy">隐私政策</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm" data-lang="footer-terms">服务条款</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm" data-lang="footer-sitemap">网站地图</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check text-3xl text-green-500"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4" data-lang="modal-title">提交成功</h3>
+                <p class="text-gray-600 mb-6" data-lang="modal-message">感谢您的留言，我们的客服人员将在24小时内与您联系</p>
+                <button id="close-modal" class="btn-primary text-white font-medium py-2 px-6 rounded-lg" data-lang="modal-close">关闭</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Language Packs
+        const translations = {
+            zh: {
+                // Navigation
+                'nav-company': '小金再生资源',
+                'nav-home': '首页',
+                'nav-about': '关于我们',
+                'nav-business': '核心业务',
+                'nav-products': '产品中心',
+                'nav-news': '新闻动态',
+                'nav-contact': '联系我们',
+                
+                // Hero Section
+                'hero-title': '科技赋能环保',
+                'hero-subtitle': '高效垃圾分类 · 碳中和技术 · 智能环保设备制造',
+                'hero-about-btn': '了解更多',
+                'hero-contact-btn': '联系我们',
+                
+                // Core Advantages
+                'advantages-title': '核心优势',
+                'advantages-subtitle': '我们拥有一支高素质的研发团队和先进的技术，致力于为客户提供最优质的环保解决方案',
+                'advantages-team-title': '团队实力',
+                'advantages-doctor': '博士',
+                'advantages-master': '硕士',
+                'advantages-985': '985/211',
+                'advantages-staff': '团队成员',
+                'advantages-data-title': '数据看板',
+                'advantages-sorting-rate': '垃圾分类率 (%)',
+                'advantages-carbon-reduction': '碳减排量 (吨/年)',
+                
+                // Products
+                'products-title': '产品预览',
+                'products-subtitle': '我们提供一系列智能环保设备，助力城市垃圾分类和环境清洁',
+                'product-1-title': '智能垃圾分类箱',
+                'product-1-desc': 'AI识别、自动分类、积分奖励系统，提高居民参与度',
+                'product-2-title': '智能回收秤',
+                'product-2-desc': '精准称重、数据上传、智能结算，提升回收效率',
+                'product-3-title': '无人清扫车',
+                'product-3-desc': '自动驾驶、智能避障、高效清扫，降低人力成本',
+                'product-learn-more': '了解更多',
+                'products-view-all': '查看全部产品',
+                
+                // Company Mission
+                'mission-title': '企业使命',
+                'mission-subtitle': '我们致力于通过科技创新推动环保事业发展，为建设美丽中国贡献力量',
+                'mission-mission': '使命',
+                'mission-mission-text': '通过科技创新推动垃圾分类和资源回收利用，减少环境污染，保护生态环境',
+                'mission-vision': '愿景',
+                'mission-vision-text': '成为全球领先的智能环保解决方案提供商，引领行业发展方向',
+                'mission-values': '价值观',
+                'mission-values-text': '创新、责任、合作、共赢，以科技之力守护绿水青山',
+                'mission-pillar-1': '垃圾分类',
+                'mission-pillar-1-text': '通过智能化设备和系统化解决方案，提高垃圾分类准确率和效率',
+                'mission-pillar-2': '碳中和',
+                'mission-pillar-2-text': '开发碳减排技术，助力企业和城市实现碳中和目标',
+                'mission-pillar-3': '智能设备',
+                'mission-pillar-3-text': '研发和制造智能环保设备，提升环保工作的智能化水平',
+                'mission-pillar-4': '数据服务',
+                'mission-pillar-4-text': '提供环保数据分析和决策支持，实现精准环保管理',
+                
+                // About Us
+                'about-title': '关于我们',
+                'about-subtitle': '小金再生资源是一家专注于环保科技创新的企业，致力于为客户提供全方位的环保解决方案',
+                'about-company-title': '公司简介',
+                'about-company-text-1': '小金再生资源成立于2025年，是一家聚焦"高效垃圾分类、碳中和技术、智能环保设备制造"的科技型环保企业。公司拥有一支高素质的研发团队，核心成员均来自国内外知名高校和企业。',
+                'about-company-text-2': '我们的核心产品涵盖智能垃圾分类箱、智能回收秤、智能环卫车、无人清扫车等，广泛应用于城市垃圾分类、资源回收利用和环境清洁等领域。',
+                'about-feature-1': '国家高新技术企业',
+                'about-feature-2': 'ISO9001质量认证',
+                'about-feature-3': '50+项专利技术',
+                'about-feature-4': '服务100+城市',
+                'about-years': '年行业经验',
+                'about-projects': '成功项目',
+                'about-team-title': '核心团队',
+                'about-team-1-name': '张博士',
+                'about-team-1-title': '技术总监',
+                'about-team-1-desc': '清华大学环境工程博士，曾任职于国际知名环保企业，拥有10年以上环保技术研发经验',
+                'about-team-2-name': '李博士',
+                'about-team-2-title': '研发总监',
+                'about-team-2-desc': '北京大学计算机科学博士，专注于AI算法和计算机视觉在环保领域的应用研究',
+                'about-team-3-name': '王经理',
+                'about-team-3-title': '市场总监',
+                'about-team-3-desc': '复旦大学MBA，拥有丰富的环保行业市场推广和项目管理经验',
+                'about-team-4-name': '赵博士',
+                'about-team-4-title': '产品总监',
+                'about-team-4-desc': '麻省理工学院机械工程博士，专注于智能环保设备的设计和开发',
+                
+                // Business
+                'business-title': '核心业务',
+                'business-subtitle': '我们提供全方位的环保解决方案，助力城市绿色发展',
+                'business-1-title': '垃圾分类解决方案',
+                'business-1-desc': '提供智能化垃圾分类系统，包括智能分类箱、回收秤、数据管理平台等，实现垃圾分类的智能化、信息化和精细化管理。',
+                'business-1-feature-1': 'AI视觉识别技术',
+                'business-1-feature-2': '智能积分奖励系统',
+                'business-1-feature-3': '大数据分析平台',
+                'business-2-title': '碳中和技术',
+                'business-2-desc': '开发碳减排技术和碳汇管理系统，帮助企业和城市测量、报告和减少碳排放，实现碳中和目标。',
+                'business-2-feature-1': '碳排放监测系统',
+                'business-2-feature-2': '碳足迹分析工具',
+                'business-2-feature-3': '碳中和解决方案',
+                'business-3-title': '智能设备制造',
+                'business-3-desc': '研发和制造智能环保设备，包括智能垃圾分类箱、智能回收秤、智能环卫车、无人清扫车等。',
+                'business-3-feature-1': '自主研发核心技术',
+                'business-3-feature-2': '智能化控制系统',
+                'business-3-feature-3': '远程监控和维护',
+                'business-learn-more': '了解更多',
+                'business-cases-title': '成功案例',
+                'business-case-1-title': '北京市海淀区智能垃圾分类项目',
+                'business-case-1-desc': '为海淀区100个社区提供智能垃圾分类解决方案，覆盖居民20万户，垃圾分类准确率提升至95%以上。',
+                'business-case-2-title': '上海市浦东新区无人清扫车项目',
+                'business-case-2-desc': '在浦东新区核心商圈部署50台无人清扫车，实现24小时智能清扫，清扫效率提升300%，人力成本降低60%。',
+                'business-case-date': '2024年6月',
+                'business-case-detail': '查看详情',
+                
+                // News
+                'news-title': '新闻动态',
+                'news-subtitle': '了解公司最新动态和行业资讯',
+                'news-company-news': '公司新闻',
+                'news-product-news': '产品新闻',
+                'news-industry-news': '行业资讯',
+                'news-1-title': '小金再生资源完成B轮融资，估值达10亿元',
+                'news-1-desc': '本轮融资将用于扩大智能环保设备生产规模和研发新一代垃圾分类技术...',
+                'news-2-title': '小金再生资源发布新一代智能垃圾分类箱',
+                'news-2-desc': '新一代产品采用更先进的AI识别技术，识别准确率提升至98%，支持更多种类垃圾的分类...',
+                'news-3-title': '国家发布新版垃圾分类标准，促进垃圾分类精细化',
+                'news-3-desc': '新版标准对垃圾种类进行了更详细的划分，将进一步推动垃圾分类工作的精细化和规范化...',
+                'news-read-more': '阅读更多',
+                'news-view-all': '查看全部新闻',
+                
+                // Contact
+                'contact-title': '联系我们',
+                'contact-subtitle': '如果您对我们的产品和服务感兴趣，或有任何问题，请随时与我们联系',
+                'contact-info-title': '联系方式',
+                'contact-address': '总部地址',
+                'contact-address-detail': '北京市海淀区中关村科技园区环保科技园B座5层',
+                'contact-phone': '电话',
+                'contact-email': '邮箱',
+                'contact-hours': '工作时间',
+                'contact-hours-detail': '周一至周五: 9:00 - 18:00',
+                'contact-social': '关注我们',
+                'contact-form-title': '留言表单',
+                'contact-form-name': '姓名',
+                'contact-form-company': '公司',
+                'contact-form-phone': '电话',
+                'contact-form-email': '邮箱',
+                'contact-form-message': '需求描述',
+                'contact-form-submit': '提交',
+                
+                // Footer
+                'footer-desc': '小金再生资源是一家聚焦"高效垃圾分类、碳中和技术、智能环保设备制造"的科技型环保企业',
+                'footer-quick-links': '快速链接',
+                'footer-home': '首页',
+                'footer-about': '关于我们',
+                'footer-business': '核心业务',
+                'footer-products': '产品中心',
+                'footer-news': '新闻动态',
+                'footer-contact': '联系我们',
+                'footer-products': '产品中心',
+                'footer-product-1': '智能垃圾分类箱',
+                'footer-product-2': '智能回收秤',
+                'footer-product-3': '智能环卫车',
+                'footer-product-4': '无人清扫车',
+                'footer-product-5': '垃圾分类管理平台',
+                'footer-product-6': '碳中和解决方案',
+                'footer-contact': '联系我们',
+                'footer-address': '北京市海淀区中关村科技园区环保科技园B座5层',
+                'footer-hours': '周一至周五: 9:00 - 18:00',
+                'footer-copyright': '© 2025 小金再生资源科技有限公司. 保留所有权利.',
+                'footer-privacy': '隐私政策',
+                'footer-terms': '服务条款',
+                'footer-sitemap': '网站地图',
+                
+                // Modal
+                'modal-title': '提交成功',
+                'modal-message': '感谢您的留言，我们的客服人员将在24小时内与您联系',
+                'modal-close': '关闭'
+            },
+            en: {
+                // Navigation
+                'nav-company': 'Xiaojin Recycling',
+                'nav-home': 'Home',
+                'nav-about': 'About Us',
+                'nav-business': 'Core Business',
+                'nav-products': 'Products',
+                'nav-news': 'News',
+                'nav-contact': 'Contact',
+                
+                // Hero Section
+                'hero-title': 'Technology Empowers Environmental Protection',
+                'hero-subtitle': 'Efficient Waste Sorting · Carbon Neutrality Technology · Intelligent Environmental Equipment Manufacturing',
+                'hero-about-btn': 'Learn More',
+                'hero-contact-btn': 'Contact Us',
+                
+                // Core Advantages
+                'advantages-title': 'Core Advantages',
+                'advantages-subtitle': 'We have a high-quality R&D team and advanced technology, committed to providing customers with the best environmental solutions',
+                'advantages-team-title': 'Team Strength',
+                'advantages-doctor': 'Doctors',
+                'advantages-master': 'Masters',
+                'advantages-985': '985/211',
+                'advantages-staff': 'Team Members',
+                'advantages-data-title': 'Data Dashboard',
+                'advantages-sorting-rate': 'Waste Sorting Rate (%)',
+                'advantages-carbon-reduction': 'Carbon Reduction (tons/year)',
+                
+                // Products
+                'products-title': 'Product Preview',
+                'products-subtitle': 'We provide a series of intelligent environmental protection equipment to help cities with waste sorting and environmental cleaning',
+                'product-1-title': 'Intelligent Waste Sorting Bin',
+                'product-1-desc': 'AI recognition, automatic sorting, point reward system, improving residents\' participation',
+                'product-2-title': 'Intelligent Recycling Scale',
+                'product-2-desc': 'Precise weighing, data upload, intelligent settlement, improving recycling efficiency',
+                'product-3-title': 'Unmanned Cleaning Vehicle',
+                'product-3-desc': 'Autonomous driving, intelligent obstacle avoidance, efficient cleaning, reducing labor costs',
+                'product-learn-more': 'Learn More',
+                'products-view-all': 'View All Products',
+                
+                // Company Mission
+                'mission-title': 'Corporate Mission',
+                'mission-subtitle': 'We are committed to promoting the development of environmental protection through technological innovation and contributing to building a beautiful China',
+                'mission-mission': 'Mission',
+                'mission-mission-text': 'Promote waste sorting and resource recycling through technological innovation, reduce environmental pollution, and protect the ecological environment',
+                'mission-vision': 'Vision',
+                'mission-vision-text': 'To become a global leader in intelligent environmental protection solutions, leading the development direction of the industry',
+                'mission-values': 'Values',
+                'mission-values-text': 'Innovation, responsibility, cooperation, win-win, protecting green waters and lush mountains with the power of technology',
+                'mission-pillar-1': 'Waste Sorting',
+                'mission-pillar-1-text': 'Improve the accuracy and efficiency of waste sorting through intelligent equipment and systematic solutions',
+                'mission-pillar-2': 'Carbon Neutrality',
+                'mission-pillar-2-text': 'Develop carbon emission reduction technologies to help enterprises and cities achieve carbon neutrality goals',
+                'mission-pillar-3': 'Intelligent Equipment',
+                'mission-pillar-3-text': 'Research, develop and manufacture intelligent environmental protection equipment to improve the intelligence level of environmental protection work',
+                'mission-pillar-4': 'Data Services',
+                'mission-pillar-4-text': 'Provide environmental data analysis and decision support to achieve precise environmental management',
+                
+                // About Us
+                'about-title': 'About Us',
+                'about-subtitle': 'Xiaojin Recycling is an enterprise focusing on environmental protection technology innovation, committed to providing customers with comprehensive environmental solutions',
+                'about-company-title': 'Company Introduction',
+                'about-company-text-1': 'Founded in 2025, Xiaojin Recycling is a technology-based environmental protection enterprise focusing on "efficient waste sorting, carbon neutrality technology, and intelligent environmental protection equipment manufacturing". The company has a high-quality R&D team, with core members from well-known universities and enterprises at home and abroad.',
+                'about-company-text-2': 'Our core products include intelligent waste sorting bins, intelligent recycling scales, intelligent sanitation vehicles, unmanned cleaning vehicles, etc., which are widely used in urban waste sorting, resource recycling, and environmental cleaning.',
+                'about-feature-1': 'National High-tech Enterprise',
+                'about-feature-2': 'ISO9001 Quality Certification',
+                'about-feature-3': '50+ Patent Technologies',
+                'about-feature-4': 'Serving 100+ Cities',
+                'about-years': 'Years of Industry Experience',
+                'about-projects': 'Successful Projects',
+                'about-team-title': 'Core Team',
+                'about-team-1-name': 'Dr. Zhang',
+                'about-team-1-title': 'Technical Director',
+                'about-team-1-desc': 'PhD in Environmental Engineering from Tsinghua University, former employee of internationally renowned environmental protection enterprises, with more than 10 years of experience in environmental protection technology R&D',
+                'about-team-2-name': 'Dr. Li',
+                'about-team-2-title': 'R&D Director',
+                'about-team-2-desc': 'PhD in Computer Science from Peking University, focusing on the application research of AI algorithms and computer vision in the field of environmental protection',
+                'about-team-3-name': 'Manager Wang',
+                'about-team-3-title': 'Marketing Director',
+                'about-team-3-desc': 'MBA from Fudan University, with rich experience in environmental protection industry marketing and project management',
+                'about-team-4-name': 'Dr. Zhao',
+                'about-team-4-title': 'Product Director',
+                'about-team-4-desc': 'PhD in Mechanical Engineering from MIT, focusing on the design and development of intelligent environmental protection equipment',
+                
+                // Business
+                'business-title': 'Core Business',
+                'business-subtitle': 'We provide comprehensive environmental protection solutions to help cities develop greenly',
+                'business-1-title': 'Waste Sorting Solutions',
+                'business-1-desc': 'Provide intelligent waste sorting systems, including intelligent sorting bins, recycling scales, data management platforms, etc., to realize intelligent, information-based and refined management of waste sorting.',
+                'business-1-feature-1': 'AI Visual Recognition Technology',
+                'business-1-feature-2': 'Intelligent Point Reward System',
+                'business-1-feature-3': 'Big Data Analysis Platform',
+                'business-2-title': 'Carbon Neutrality Technology',
+                'business-2-desc': 'Develop carbon emission reduction technologies and carbon sink management systems to help enterprises and cities measure, report and reduce carbon emissions, and achieve carbon neutrality goals.',
+                'business-2-feature-1': 'Carbon Emission Monitoring System',
+                'business-2-feature-2': 'Carbon Footprint Analysis Tool',
+                'business-2-feature-3': 'Carbon Neutrality Solutions',
+                'business-3-title': 'Intelligent Equipment Manufacturing',
+                'business-3-desc': 'Research, develop and manufacture intelligent environmental protection equipment, including intelligent waste sorting bins, intelligent recycling scales, intelligent sanitation vehicles, unmanned cleaning vehicles, etc.',
+                'business-3-feature-1': 'Independent R&D Core Technology',
+                'business-3-feature-2': 'Intelligent Control System',
+                'business-3-feature-3': 'Remote Monitoring and Maintenance',
+                'business-learn-more': 'Learn More',
+                'business-cases-title': 'Successful Cases',
+                'business-case-1-title': 'Intelligent Waste Sorting Project in Haidian District, Beijing',
+                'business-case-1-desc': 'Provide intelligent waste sorting solutions for 100 communities in Haidian District, covering 200,000 households, with waste sorting accuracy rate increased to over 95%.',
+                'business-case-2-title': 'Unmanned Cleaning Vehicle Project in Pudong New District, Shanghai',
+                'business-case-2-desc': 'Deploy 50 unmanned cleaning vehicles in the core business district of Pudong New District to achieve 24-hour intelligent cleaning, with cleaning efficiency increased by 300% and labor costs reduced by 60%.',
+                'business-case-date': 'June 2024',
+                'business-case-detail': 'View Details',
+                
+                // News
+                'news-title': 'News',
+                'news-subtitle': 'Learn about the latest company developments and industry information',
+                'news-company-news': 'Company News',
+                'news-product-news': 'Product News',
+                'news-industry-news': 'Industry News',
+                'news-1-title': 'Xiaojin Recycling Completes Series B Financing, Valued at 1 Billion Yuan',
+                'news-1-desc': 'This round of financing will be used to expand the production scale of intelligent environmental protection equipment and develop a new generation of waste sorting technology...',
+                'news-2-title': 'Xiaojin Recycling Releases New Generation of Intelligent Waste Sorting Bins',
+                'news-2-desc': 'The new generation of products adopts more advanced AI recognition technology, with recognition accuracy increased to 98%, supporting more types of waste sorting...',
+                'news-3-title': 'The State Issues New Waste Sorting Standards to Promote Refined Waste Sorting',
+                'news-3-desc': 'The new standards provide more detailed classification of waste types, which will further promote the refinement and standardization of waste sorting work...',
+                'news-read-more': 'Read More',
+                'news-view-all': 'View All News',
+                
+                // Contact
+                'contact-title': 'Contact Us',
+                'contact-subtitle': 'If you are interested in our products and services, or have any questions, please feel free to contact us',
+                'contact-info-title': 'Contact Information',
+                'contact-address': 'Headquarters Address',
+                'contact-address-detail': '5th Floor, Building B, Environmental Protection Science and Technology Park, Zhongguancun Science and Technology Park, Haidian District, Beijing',
+                'contact-phone': 'Phone',
+                'contact-email': 'Email',
+                'contact-hours': 'Working Hours',
+                'contact-hours-detail': 'Monday to Friday: 9:00 - 18:00',
+                'contact-social': 'Follow Us',
+                'contact-form-title': 'Contact Form',
+                'contact-form-name': 'Name',
+                'contact-form-company': 'Company',
+                'contact-form-phone': 'Phone',
+                'contact-form-email': 'Email',
+                'contact-form-message': 'Message',
+                'contact-form-submit': 'Submit',
+                
+                // Footer
+                'footer-desc': 'Xiaojin Recycling is a technology-based environmental protection enterprise focusing on "efficient waste sorting, carbon neutrality technology, and intelligent environmental protection equipment manufacturing"',
+                'footer-quick-links': 'Quick Links',
+                'footer-home': 'Home',
+                'footer-about': 'About Us',
+                'footer-business': 'Core Business',
+                'footer-products': 'Products',
+                'footer-news': 'News',
+                'footer-contact': 'Contact',
+                'footer-products': 'Products',
+                'footer-product-1': 'Intelligent Waste Sorting Bin',
+                'footer-product-2': 'Intelligent Recycling Scale',
+                'footer-product-3': 'Intelligent Sanitation Vehicle',
+                'footer-product-4': 'Unmanned Cleaning Vehicle',
+                'footer-product-5': 'Waste Sorting Management Platform',
+                'footer-product-6': 'Carbon Neutrality Solutions',
+                'footer-contact': 'Contact Us',
+                'footer-address': '5th Floor, Building B, Environmental Protection Science and Technology Park, Zhongguancun Science and Technology Park, Haidian District, Beijing',
+                'footer-hours': 'Monday to Friday: 9:00 - 18:00',
+                'footer-copyright': '© 2025 Xiaojin Recycling Technology Co., Ltd. All rights reserved.',
+                'footer-privacy': 'Privacy Policy',
+                'footer-terms': 'Terms of Service',
+                'footer-sitemap': 'Sitemap',
+                
+                // Modal
+                'modal-title': 'Submission Successful',
+                'modal-message': 'Thank you for your message, our customer service staff will contact you within 24 hours',
+                'modal-close': 'Close'
+            }
+        };
+        
+        // Language Switcher
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default language
+            let currentLang = 'zh';
+            
+            // Language switch buttons
+            const langZhBtn = document.getElementById('lang-zh');
+            const langEnBtn = document.getElementById('lang-en');
+            
+            // Switch language function
+            function switchLanguage(lang) {
+                currentLang = lang;
+                
+                // Update button styles
+                if (lang === 'zh') {
+                    langZhBtn.classList.add('bg-green-500', 'text-white');
+                    langZhBtn.classList.remove('bg-white', 'text-gray-700');
+                    langEnBtn.classList.add('bg-white', 'text-gray-700');
+                    langEnBtn.classList.remove('bg-green-500', 'text-white');
+                } else {
+                    langEnBtn.classList.add('bg-green-500', 'text-white');
+                    langEnBtn.classList.remove('bg-white', 'text-gray-700');
+                    langZhBtn.classList.add('bg-white', 'text-gray-700');
+                    langZhBtn.classList.remove('bg-green-500', 'text-white');
+                }
+                
+                // Update page content
+                document.querySelectorAll('[data-lang]').forEach(el => {
+                    const key = el.getAttribute('data-lang');
+                    if (translations[lang][key]) {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+                
+                // Save language preference to localStorage
+                localStorage.setItem('preferredLanguage', lang);
+            }
+            
+            // Load saved language preference
+            const savedLang = localStorage.getItem('preferredLanguage');
+            if (savedLang) {
+                switchLanguage(savedLang);
+            }
+            
+            // Language switch button click events
+            langZhBtn.addEventListener('click', () => switchLanguage('zh'));
+            langEnBtn.addEventListener('click', () => switchLanguage('en'));
+            
+            // Mobile menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+            });
+            
+            closeMobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+            
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+            
+            // Navigation scroll effect
+            const mainNav = document.getElementById('main-nav');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    mainNav.classList.add('bg-white', 'shadow-md');
+                    mainNav.classList.remove('bg-transparent');
+                } else {
+                    mainNav.classList.remove('bg-white', 'shadow-md');
+                    mainNav.classList.add('bg-transparent');
+                }
+            });
+            
+            // Counter animation
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200;
+            
+            const observerOptions = {
+                threshold: 0.5
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        let count = 0;
+                        
+                        const updateCount = () => {
+                            const increment = target / speed;
+                            
+                            if (count < target) {
+                                count += increment;
+                                counter.innerText = Math.ceil(count);
+                                setTimeout(updateCount, 1);
+                            } else {
+                                counter.innerText = target;
+                            }
+                        };
+                        
+                        updateCount();
+                        observer.unobserve(counter);
+                    }
+                });
+            }, observerOptions);
+            
+            counters.forEach(counter => {
+                observer.observe(counter);
+            });
+            
+            // Contact form submission
+            const contactForm = document.getElementById('contact-form');
+            const successModal = document.getElementById('success-modal');
+            const closeModalButton = document.getElementById('close-modal');
+            
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Simulate form submission
+                setTimeout(() => {
+                    successModal.classList.remove('hidden');
+                    contactForm.reset();
+                }, 1000);
+            });
+            
+            closeModalButton.addEventListener('click', () => {
+                successModal.classList.add('hidden');
+            });
+            
+            // Back to top button
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    backToTopButton.style.display = 'block';
+                } else {
+                    backToTopButton.style.display = 'none';
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Initialize 3D Logo
+            initLogo3D();
+            
+            // Initialize product 3D previews
+            initProduct3D('product-1');
+            initProduct3D('product-2');
+            initProduct3D('product-3');
+            
+            // Initialize data visualization
+            initDataVisualization();
+        });
+        
+        // 3D Logo Initialization
+        function initLogo3D() {
+            const container = document.getElementById('logo-container');
+            
+            // Create scene
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000, 0);
+            
+            // Create camera
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // Create renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create logo geometry (simplified recycling symbol)
+            const logoGroup = new THREE.Group();
+            
+            // Create first arrow
+            const arrow1 = new THREE.Mesh(
+                new THREE.ConeGeometry(0.5, 2, 32),
+                new THREE.MeshPhongMaterial({ color: 0x00B42A })
+            );
+            arrow1.rotation.z = Math.PI / 2;
+            arrow1.position.x = -1;
+            logoGroup.add(arrow1);
+            
+            // Create second arrow
+            const arrow2 = new THREE.Mesh(
+                new THREE.ConeGeometry(0.5, 2, 32),
+                new THREE.MeshPhongMaterial({ color: 0x00B42A })
+            );
+            arrow2.rotation.z = -Math.PI / 6;
+            arrow2.position.y = 1;
+            arrow2.position.x = 0.5;
+            logoGroup.add(arrow2);
+            
+            // Create third arrow
+            const arrow3 = new THREE.Mesh(
+                new THREE.ConeGeometry(0.5, 2, 32),
+                new THREE.MeshPhongMaterial({ color: 0x1E3A8A })
+            );
+            arrow3.rotation.z = Math.PI + Math.PI / 6;
+            arrow3.position.y = -1;
+            arrow3.position.x = 0.5;
+            logoGroup.add(arrow3);
+            
+            // Add logo to scene
+            scene.add(logoGroup);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Animation
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                logoGroup.rotation.y += 0.01;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+        
+        // 3D Product Preview Initialization
+        function initProduct3D(containerId) {
+            const container = document.getElementById(containerId);
+            
+            // Create scene
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000, 0);
+            
+            // Create camera
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // Create renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create product geometry based on containerId
+            let product;
+            
+            if (containerId === 'product-1') {
+                // Waste sorting bin
+                product = new THREE.Mesh(
+                    new THREE.BoxGeometry(2, 2, 1),
+                    new THREE.MeshPhongMaterial({ color: 0x00B42A })
+                );
+            } else if (containerId === 'product-2') {
+                // Recycling scale
+                product = new THREE.Group();
+                
+                const base = new THREE.Mesh(
+                    new THREE.BoxGeometry(2, 0.2, 2),
+                    new THREE.MeshPhongMaterial({ color: 0x1E3A8A })
+                );
+                product.add(base);
+                
+                const pole = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.1, 0.1, 2, 32),
+                    new THREE.MeshPhongMaterial({ color: 0xCCCCCC })
+                );
+                pole.position.y = 1.1;
+                product.add(pole);
+                
+                const display = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.8, 0.6, 0.2),
+                    new THREE.MeshPhongMaterial({ color: 0x333333 })
+                );
+                display.position.y = 2.2;
+                display.position.z = 0.1;
+                product.add(display);
+            } else if (containerId === 'product-3') {
+                // Unmanned cleaning vehicle
+                product = new THREE.Group();
+                
+                const body = new THREE.Mesh(
+                    new THREE.BoxGeometry(3, 1, 1.5),
+                    new THREE.MeshPhongMaterial({ color: 0xFFFFFF })
+                );
+                product.add(body);
+                
+                const roof = new THREE.Mesh(
+                    new THREE.BoxGeometry(2, 0.5, 1.5),
+                    new THREE.MeshPhongMaterial({ color: 0x1E3A8A })
+                );
+                roof.position.y = 0.75;
+                product.add(roof);
+                
+                const wheel1 = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.3, 0.3, 0.2, 32),
+                    new THREE.MeshPhongMaterial({ color: 0x333333 })
+                );
+                wheel1.rotation.z = Math.PI / 2;
+                wheel1.position.set(1, -0.5, 0.7);
+                product.add(wheel1);
+                
+                const wheel2 = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.3, 0.3, 0.2, 32),
+                    new THREE.MeshPhongMaterial({ color: 0x333333 })
+                );
+                wheel2.rotation.z = Math.PI / 2;
+                wheel2.position.set(1, -0.5, -0.7);
+                product.add(wheel2);
+                
+                const wheel3 = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.3, 0.3, 0.2, 32),
+                    new THREE.MeshPhongMaterial({ color: 0x333333 })
+                );
+                wheel3.rotation.z = Math.PI / 2;
+                wheel3.position.set(-1, -0.5, 0.7);
+                product.add(wheel3);
+                
+                const wheel4 = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.3, 0.3, 0.2, 32),
+                    new THREE.MeshPhongMaterial({ color: 0x333333 })
+                );
+                wheel4.rotation.z = Math.PI / 2;
+                wheel4.position.set(-1, -0.5, -0.7);
+                product.add(wheel4);
+            }
+            
+            // Add product to scene
+            scene.add(product);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Animation
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                if (product) {
+                    product.rotation.y += 0.01;
+                }
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+        
+        // Data Visualization Initialization
+        function initDataVisualization() {
+            const ctx = document.createElement('canvas');
+            document.getElementById('data-visualization').appendChild(ctx);
+            
+            // Create gradient background
+            const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(0, 180, 42, 0.2)');
+            gradient.addColorStop(1, 'rgba(30, 58, 138, 0.2)');
+            
+            // Create chart
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2021', '2022', '2023', '2024', '2025'],
+                    datasets: [
+                        {
+                            label: '垃圾分类率 (%)',
+                            data: [45, 60, 75, 85, 95],
+                            backgroundColor: 'rgba(0, 180, 42, 0.7)',
+                            borderColor: 'rgba(0, 180, 42, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '碳减排量 (吨)',
+                            data: [5000, 8000, 12000, 18000, 25000],
+                            backgroundColor: 'rgba(30, 58, 138, 0.7)',
+                            borderColor: 'rgba(30, 58, 138, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '垃圾分类率与碳减排量趋势',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '垃圾分类率 (%)'
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            title: {
+                                display: true,
+                                text: '碳减排量 (吨)'
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                chart.resize();
+            });
+        }
+    </script>
+</body>
+</html>
